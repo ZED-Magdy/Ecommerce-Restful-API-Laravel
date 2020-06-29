@@ -21,7 +21,7 @@ class ProductResource extends JsonResource
             "attributes" => $this->whenLoaded('attributes',null,[]),
             "thumbnail" => $this->avatar,
             "images" => $this->whenLoaded('images',null,[]),
-            "stoke" => (int)$this->whenLoaded('stoke',null,$this->stoke),
+            "stock" => (int)$this->whenLoaded('stoke',null,$this->stock),
             "create_time" => $this->created_at->diffForHumans(),
             "categories" => CategoryResource::collection($this->whenLoaded('categories')),
             "user" => new UserResource($this->user),

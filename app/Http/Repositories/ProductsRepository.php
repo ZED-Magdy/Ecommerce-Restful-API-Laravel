@@ -2,10 +2,12 @@
 
 namespace App\Http\Repositories;
 
+use App\Category;
 use App\Http\Repositories\Interfaces\ProductsRepositoryInterface;
 use App\Http\Resources\ProductResource;
-use App\Product;
+use App\Models\Product;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class ProductsRepository extends BaseRepository implements ProductsRepositoryInterface {
 
@@ -20,7 +22,7 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
      */
     public function paginated($perPage = 30):JsonResponse
     {
-        $products = $this->model->paginate($perPage);
+        $products = $this->model->with(['categories'])->paginate($perPage);
 
         return ProductResource::collection($products)->response();
     }
@@ -31,18 +33,31 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
      */
     public function find(Product $product):JsonResponse
     {
-        $product = $product->load(['Categories']);
+        $product = $product->load(['categories']);
         return (new ProductResource($product))->response();
     }
     public function create(array $attributes): \Illuminate\Http\JsonResponse
     {
-        return response()->json();
+        $product = DB::transaction(function () use($attributes) {
+            $product = $this->model->create([
+                "name"        => $attributes['name'],
+                "description" => $attributes['description'],
+                "stock"       => $attributes['stock'],
+                "user_id"     => auth()->id()
+            ]);
+            $product->categories()->attach($attributes['category_id']);
+             //TODO: Add Product Attributes
+            //TODO: Add Product Images
+            return $product;
+        });
+
+        return (new ProductResource($product))->response();
     }
-    public function update(array $attribute, \App\Product $product): \Illuminate\Http\JsonResponse
+    public function update(array $attribute, Product $product): \Illuminate\Http\JsonResponse
     {
         return response()->json();
     }
-    public function delete(\App\Product $product): \Illuminate\Http\JsonResponse
+    public function delete(Product $product): \Illuminate\Http\JsonResponse
     {
         return response()->json();
     }

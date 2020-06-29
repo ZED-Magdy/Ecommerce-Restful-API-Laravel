@@ -3,26 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repositories\Interfaces\ProductsRepositoryInterface;
-use App\Product;
+use App\Http\Requests\Product\storeRequest;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     /**
     *
-    * @var $repo
+    * @var ProductsRepositoryInterface $repo
     *
     */
-    public $repo;
+    private $repo;
     
     /**
     *
-    * @var $repo
+    * @param ProductsRepositoryInterface $productsRepositoryInterface
     *
     */
-    public function __construct(ProductsRepositoryInterface $repo)
+    public function __construct(ProductsRepositoryInterface $productsRepositoryInterface)
     {
-        $this->repo = $repo;
+        $this->repo = $productsRepositoryInterface;
     }
     
     /**
@@ -41,9 +42,12 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(storeRequest $request)
     {
-        //
+        return $this->repo->create($request->only([
+            "name","description","attributes","thumbnail",
+            "images","stock","category_id"
+        ]));
     }
 
     /**
@@ -66,7 +70,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        return $this->repo->update($request->only([
+            // Update request attributes
+        ]),$product);
     }
 
     /**
@@ -77,6 +83,6 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        return $this->repo->delete($product);
     }
 }

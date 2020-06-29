@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Repositories\Interfaces;
 
-use App\Product;
+use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 
 interface ProductsRepositoryInterface {

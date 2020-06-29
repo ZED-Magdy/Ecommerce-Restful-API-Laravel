@@ -16,3 +16,4 @@ Route::group([
 });
 
 Route::resource('products','ProductController')->only(['index','show']);
+Route::resource('categories','CategoryController')->only(['index','show']);

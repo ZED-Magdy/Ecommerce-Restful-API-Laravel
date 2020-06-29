@@ -32,7 +32,7 @@ $factory->define(Product::class, function(Faker $faker) {
     return [
         "name" => $faker->name(),
         "description" => $faker->paragraph(),
-        "stoke" => 100,
+        "stock" => 100,
         "user_id" => 1
     ];
 });
