@@ -21,7 +21,7 @@ class UserResource extends JsonResource
             "address" => $this->address,
             "phone" => $this->number,
             "gender" => $this->gender,
-            "avatar" => $this->avatar,
+            "avatar" => new ImageResource($this->avatar),
             "roles" => [ //TODO: When Roles loaded Resource
                 [
                     "id" => 1,

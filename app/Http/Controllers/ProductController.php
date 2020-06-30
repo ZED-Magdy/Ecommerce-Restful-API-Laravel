@@ -46,7 +46,7 @@ class ProductController extends Controller
     {
         return $this->repo->create($request->only([
             "name","description","attributes","thumbnail",
-            "images","stock","category_id"
+            "images","stock","category_id","price"
         ]));
     }
 

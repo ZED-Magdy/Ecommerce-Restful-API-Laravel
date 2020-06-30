@@ -2,8 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Product;
-use App\User;
+use App\Model\Product;
+use App\Model\User;
+use App\Models\Category;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
@@ -34,5 +35,12 @@ $factory->define(Product::class, function(Faker $faker) {
         "description" => $faker->paragraph(),
         "stock" => 100,
         "user_id" => 1
+    ];
+});
+
+$factory->define(Category::class, function(Faker $faker) {
+    return [
+        "name"      => $faker->firstName(),
+        "parent_id" => null,
     ];
 });

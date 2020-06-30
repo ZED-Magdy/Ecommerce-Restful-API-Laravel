@@ -13,7 +13,7 @@ trait Imageable {
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function images(){
-        return $this->morphMany('App\Models\Image','Imageable');
+        return $this->morphMany('App\Models\Image','imageable');
     }
 
     /**
@@ -59,12 +59,12 @@ trait Imageable {
     {
         $url = $this->saveImageFile($uploadedFile,$storage);
         if(!$update){
-            $this->createImage($url,"avatar");
+            return $this->createImage($url,"avatar");
         }
         $oldImage = $this->avatar->url;
         $image = $this->avatar->update([
             'url' => $url
-        ])->first();
+        ]);
         $this->deleteImageFile($oldImage);
         return $image;
     }
@@ -77,7 +77,6 @@ trait Imageable {
     private function createImage(string $url, string $type = null){
         $image = new Image;
         $image->url = $url;
-        $image->user_id = auth()->id();
         $image->type = $type;
         $image = $this->images()->save($image);
         return $image;
@@ -92,8 +91,9 @@ trait Imageable {
     public function saveImageFile(UploadedFile $uploadedFile, string $storage){
         $ext = $uploadedFile->getClientOriginalExtension();
         $name = uniqid('',true).'.'.$ext;
-        Storage::disk($storage)->put('/images/'.$name,file_get_contents($uploadedFile));
-        $url = url()->to('/').'/storage/'."images/".$name;
+        $path = '/images/'.$name;
+        Storage::disk($storage)->put($path,file_get_contents($uploadedFile));
+        $url = Storage::disk($storage)->url($path);
         return $url;
     }
 

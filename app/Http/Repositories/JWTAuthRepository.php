@@ -13,7 +13,7 @@ class JWTAuthRepository implements ApiAuthInterface{
     public function register(array $credentials): JsonResponse
     {
         DB::transaction(function () use($credentials) {
-            User::create([
+            $user = User::create([
                 "name"     => $credentials['name'],
                 "email"    => $credentials['email'],
                 "password" => bcrypt($credentials['password']),
@@ -21,7 +21,7 @@ class JWTAuthRepository implements ApiAuthInterface{
                 "number"   => $credentials['number'],
                 "gender"   => $credentials['gender']
             ]);
-            //TODO: Add Images
+            $user->addAvatar($credentials['image']);
             //TODO: Add Role
         });
         return response()->json(["message" => "successfully Registered"]);

@@ -33,7 +33,7 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
      */
     public function find(Product $product):JsonResponse
     {
-        $product = $product->load(['categories']);
+        $product = $product->load(['categories','images']);
         return (new ProductResource($product))->response();
     }
     public function create(array $attributes): \Illuminate\Http\JsonResponse
@@ -43,11 +43,13 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
                 "name"        => $attributes['name'],
                 "description" => $attributes['description'],
                 "stock"       => $attributes['stock'],
+                "price"       => $attributes['price'],
                 "user_id"     => auth()->id()
             ]);
             $product->categories()->attach($attributes['category_id']);
              //TODO: Add Product Attributes
-            //TODO: Add Product Images
+            $product->addAvatar($attributes['thumbnail']);
+            $product->addImages($attributes['images']);
             return $product;
         });
 
