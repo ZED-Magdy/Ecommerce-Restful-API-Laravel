@@ -19,7 +19,7 @@ class ProductResource extends JsonResource
             "name"        => $this->name,
             "description" => $this->description,
             "price"       => $this->price,
-            "stock"       => (int)$this->whenLoaded('stoke',null,$this->stock),
+            "stock"       => (int)$this->stock,
             "thumbnail"   => new ImageResource($this->avatar),
             "images"      => ImageResource::collection($this->whenLoaded('images')),
             "create_time" => $this->created_at->diffForHumans(),

@@ -9,7 +9,7 @@ class Product extends Model
 {
     use Imageable;
     
-    protected $fillable = ['user_id','name','description','stoke','price'];
+    protected $fillable = ['user_id','name','description','stock','price'];
 
     /**
      *
