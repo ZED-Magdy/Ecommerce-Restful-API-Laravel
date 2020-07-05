@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Repositories\Interfaces\ProductsRepositoryInterface;
 use App\Http\Requests\Product\storeRequest;
+use App\Http\Requests\Product\updateRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -68,11 +69,9 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(updateRequest $request, Product $product)
     {
-        return $this->repo->update($request->only([
-            // Update request attributes
-        ]),$product);
+        return $this->repo->update($request->all(),$product);
     }
 
     /**

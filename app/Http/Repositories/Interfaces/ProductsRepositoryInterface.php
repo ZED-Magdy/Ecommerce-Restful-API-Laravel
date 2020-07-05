@@ -10,7 +10,7 @@ interface ProductsRepositoryInterface {
      * @param integer $perPage
      * @return JsonResponse
      */
-    public function paginated($perPage = 15) : JsonResponse;
+    public function paginated(int $perPage) : JsonResponse;
     /**
      *
      * @param Product $product
@@ -29,7 +29,7 @@ interface ProductsRepositoryInterface {
      * @param Product $product
      * @return JsonResponse
      */
-    public function update(array $attribute,Product $product) : JsonResponse;
+    public function update(array $attributes,Product $product) : JsonResponse;
     /**
      *
      * @param Product $product

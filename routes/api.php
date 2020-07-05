@@ -15,6 +15,6 @@ Route::group([
     Route::post('me', 'AuthController@authUser');
 });
 
-Route::resource('products','ProductController')->except('store');
+Route::resource('products','ProductController')->except('store','edit','create');
 Route::post('products','ProductController@store')->middleware('auth:api');
 Route::resource('categories','CategoryController')->only(['index','show']);

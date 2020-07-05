@@ -7,6 +7,8 @@ use App\Http\Resources\UserResource;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Mockery\Undefined;
+use Spatie\Permission\Models\Role;
 
 class JWTAuthRepository implements ApiAuthInterface{
 
@@ -21,8 +23,10 @@ class JWTAuthRepository implements ApiAuthInterface{
                 "number"   => $credentials['number'],
                 "gender"   => $credentials['gender']
             ]);
-            $user->addAvatar($credentials['image']);
-            //TODO: Add Role
+            if(isset($credentials['image'])){
+                $user->addAvatar($credentials['image']);
+            }
+            $user->assignRole(Role::where('name','user')->first());
         });
         return response()->json(["message" => "successfully Registered"]);
     }
@@ -45,7 +49,7 @@ class JWTAuthRepository implements ApiAuthInterface{
      */
     public function authUser(): JsonResponse
     {
-        return (new UserResource(auth()->user()))->response();
+        return (new UserResource(auth()->user()->load('roles')))->response();
     }
     /**
      *

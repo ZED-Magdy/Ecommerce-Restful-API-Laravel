@@ -20,11 +20,12 @@ class ProductResource extends JsonResource
             "description" => $this->description,
             "price"       => $this->price,
             "stock"       => (int)$this->stock,
+            "rating"      => (float)$this->avgRating,
             "thumbnail"   => new ImageResource($this->avatar),
             "images"      => ImageResource::collection($this->whenLoaded('images')),
             "create_time" => $this->created_at->diffForHumans(),
             "attributes"  => AttributeResource::collection($this->whenLoaded('attributes')),
-            "categories"  => CategoryResource::collection($this->whenLoaded('categories')),
+            "category"  => new CategoryResource($this->whenLoaded('category')),
             "user"        => new UserResource($this->user),
         ];
     }

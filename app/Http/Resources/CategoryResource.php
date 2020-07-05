@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\MissingValue;
 
 class CategoryResource extends JsonResource
 {
@@ -14,11 +15,14 @@ class CategoryResource extends JsonResource
      */
     public function toArray($request)
     {
+        $products = $this->whenLoaded('products');
+        if(!$products instanceof MissingValue){
+            $products = $products->union($this->childProducts);
+        }
         return [
             "id"             => $this->id,
             "name"           => $this->name,
-            "products"       => ProductResource::collection($this->whenLoaded('products')),
-            "sub_categories" => CategoryResource::collection($this->whenLoaded('subCategories')),
+            "products"       => ProductResource::collection($products),
         ];
     }
 }

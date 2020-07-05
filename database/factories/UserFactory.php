@@ -5,6 +5,7 @@
 use App\Model\Product;
 use App\Model\User;
 use App\Models\Category;
+use App\Models\Rate;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
@@ -41,6 +42,15 @@ $factory->define(Product::class, function(Faker $faker) {
 $factory->define(Category::class, function(Faker $faker) {
     return [
         "name"      => $faker->firstName(),
-        "parent_id" => null,
+        "parent_id" => rand(1,5),
+    ];
+});
+
+$factory->define(Rate::class, function(Faker $faker) {
+    return [
+        "stars"      => rand(1.0,5.0),
+        "user_id" => 1,
+        "rateable_type" => "App\Models\Product",
+        "rateable_id" => 13
     ];
 });

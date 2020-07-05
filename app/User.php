@@ -2,15 +2,16 @@
 
 namespace App;
 
-use App\Triats\Imageable;
+use App\Traits\Imageable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable, Imageable;
+    use Notifiable, Imageable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -65,5 +66,13 @@ class User extends Authenticatable implements JWTSubject
      */
     public function products(){
         return $this->hasMany('App\Models\Products');
+    }
+
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function rates(){
+        return $this->hasMany('App\Models\Rate');
     }
 }

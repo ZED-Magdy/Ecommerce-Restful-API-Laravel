@@ -22,12 +22,7 @@ class UserResource extends JsonResource
             "phone" => $this->number,
             "gender" => $this->gender,
             "avatar" => new ImageResource($this->avatar),
-            "roles" => [ //TODO: When Roles loaded Resource
-                [
-                    "id" => 1,
-                    "name" => "admin"
-                ]
-            ],
+            "roles" => RoleResource::collection($this->whenLoaded('roles')),
             "signup_time" => $this->created_at->diffForHumans(),
         ];
     }

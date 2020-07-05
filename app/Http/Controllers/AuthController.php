@@ -32,7 +32,7 @@ class AuthController extends Controller
      * @return JsonResponse
      */
     public function register(RegisterRequest $request) :JsonResponse{
-        return $this->repo->register($request->only(['name','email','password','number','address','gender','image']));
+        return $this->repo->register($request->all());
     }
     /**
      *

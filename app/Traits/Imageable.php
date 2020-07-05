@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Triats;
+namespace App\Traits;
 
 use App\Models\Image;
 use Illuminate\Http\UploadedFile;
@@ -38,7 +38,7 @@ trait Imageable {
      * @param boolean $update
      * @return bool
      */
-    public function addImages(array $uploadedFiles, string $storage = "public", bool $update = false){
+    public function addImages(array $uploadedFiles, bool $update = false, string $storage = "public"){
         if($update){
             $this->deleteImages();
         }
@@ -55,17 +55,17 @@ trait Imageable {
      * @param boolean $update
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function addAvatar(UploadedFile $uploadedFile, string $storage = "public", bool $update = false)
+    public function addAvatar(UploadedFile $uploadedFile, bool $update = false, string $storage = "public")
     {
         $url = $this->saveImageFile($uploadedFile,$storage);
         if(!$update){
             return $this->createImage($url,"avatar");
         }
         $oldImage = $this->avatar->url;
+        $this->deleteImageFile($oldImage);
         $image = $this->avatar->update([
             'url' => $url
         ]);
-        $this->deleteImageFile($oldImage);
         return $image;
     }
 
@@ -99,7 +99,7 @@ trait Imageable {
 
     /**
      *
-     * @return bool
+     * @return
      */
     public function deleteImages(){
         if($this->relationLoaded('images')){
@@ -109,12 +109,11 @@ trait Imageable {
             }
         }
         else{
-            foreach ($this->images() as $image) {
+            foreach ($this->images()->get() as $image) {
                 $this->deleteImageFile($image->url);
                 $image->delete();
             }
         }
-        return true;
     }
 
     /**
@@ -123,6 +122,8 @@ trait Imageable {
      * @return bool
      */
     private function deleteImageFile(string $url){
-        return Storage::delete($url);
+        $path = explode(Storage::disk('public')->url(''),$url);
+        Storage::disk('public')->delete($path);
+        return true;
     }
 }
