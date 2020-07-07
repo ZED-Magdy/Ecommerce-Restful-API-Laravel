@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Rate;
+use Illuminate\Support\Str;
 
 trait Rateable {
 
@@ -20,9 +21,9 @@ trait Rateable {
      */
     public function getAvgRatingAttribute(){
         if($this->relationLoaded('ratings')){
-            return $this->ratings->avg('stars');
+            return Str::of($this->ratings->avg('stars'))->limit('4')->__toString();
         }
-        return $this->ratings()->avg('stars');
+        return Str::of($this->ratings()->avg('stars'))->limit('4')->__toString();
     }
 
     /**
@@ -53,7 +54,7 @@ trait Rateable {
             'stars' => $stars
         ]);
 
-        $rate->updateComment($review);
+        $rate->updateComment($review,$rate->comments()->first());
         
         return true;
     }

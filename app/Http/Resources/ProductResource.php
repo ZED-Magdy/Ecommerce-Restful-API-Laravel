@@ -24,9 +24,12 @@ class ProductResource extends JsonResource
             "thumbnail"   => new ImageResource($this->avatar),
             "images"      => ImageResource::collection($this->whenLoaded('images')),
             "create_time" => $this->created_at->diffForHumans(),
-            "attributes"  => AttributeResource::collection($this->whenLoaded('attributes')),
-            "category"  => new CategoryResource($this->whenLoaded('category')),
-            "user"        => new UserResource($this->user),
+            "attributes" => AttributeResource::collection($this->whenLoaded('attributes')),
+            "category"   => new CategoryResource($this->whenLoaded('category')),
+            "seller"       => new UserResource($this->user),
+            "ratings"    => [
+                "link" => route('product.ratings.index',$this->id)
+            ]
         ];
     }
 }

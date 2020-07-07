@@ -17,7 +17,7 @@ class CategoryResource extends JsonResource
     {
         $products = $this->whenLoaded('products');
         if(!$products instanceof MissingValue){
-            $products = $products->union($this->childProducts);
+            $products = $products->merge($this->childProducts)->sortBy("id");
         }
         return [
             "id"             => $this->id,

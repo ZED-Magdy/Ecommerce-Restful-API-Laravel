@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Controller;
 use App\Http\Repositories\Interfaces\ProductsRepositoryInterface;
 use App\Http\Requests\Product\storeRequest;
 use App\Http\Requests\Product\updateRequest;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -34,7 +36,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return $this->repo->paginated();
+        return ProductResource::collection($this->repo->paginated())->response();
     }
 
     /**
@@ -45,10 +47,11 @@ class ProductController extends Controller
      */
     public function store(storeRequest $request)
     {
-        return $this->repo->create($request->only([
+        $product = $this->repo->create($request->only([
             "name","description","attributes","thumbnail",
-            "images","stock","category_id","price"
-        ]));
+            "images","stock","category_id","price"]));
+        
+        return (new ProductResource($product))->response();
     }
 
     /**
@@ -59,7 +62,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return $this->repo->find($product);
+        return (new ProductResource($this->repo->find($product)));
     }
 
     /**
@@ -71,7 +74,9 @@ class ProductController extends Controller
      */
     public function update(updateRequest $request, Product $product)
     {
-        return $this->repo->update($request->all(),$product);
+        $updated = $this->repo->update($request->all(),$product);
+
+        return response()->json(['status' => $updated]);
     }
 
     /**
@@ -82,6 +87,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        return $this->repo->delete($product);
+        $deleted = $this->repo->delete($product);
+        return response()->json(['status' => $deleted]);
     }
 }

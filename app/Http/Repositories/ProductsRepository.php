@@ -7,7 +7,9 @@ use App\Http\Repositories\Interfaces\ProductsRepositoryInterface;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Mixed_;
 
 class ProductsRepository extends BaseRepository implements ProductsRepositoryInterface {
 
@@ -15,34 +17,36 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
     {
         parent::__construct($product);
     }
+
     /**
      *
      * @param integer $perPage
-     * @return JsonResponse
+     * @return LengthAwarePaginator
      */
-    public function paginated(int $perPage = 30):JsonResponse
+    public function paginated(int $perPage = 30):LengthAwarePaginator
     {
         $products = $this->model->with(['category'])->paginate($perPage);
 
-        return ProductResource::collection($products)->response();
+        return $products;
     }
+
     /**
      *
      * @param Product $product
-     * @return JsonResponse
+     * @return Product
      */
-    public function find(Product $product):JsonResponse
+    public function find(Product $product):Product
     {
         $product = $product->load(['category','images','attributes']);
-        return (new ProductResource($product))->response();
+        return $product;
     }
 
     /**
      *
      * @param array $attributes
-     * @return \Illuminate\Http\JsonResponse
+     * @return Product
      */
-    public function create(array $attributes): \Illuminate\Http\JsonResponse
+    public function create(array $attributes): Product
     {
         $product = DB::transaction(function () use($attributes) {
             $product = $this->model->create([
@@ -59,16 +63,16 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
             return $product;
         });
 
-        return (new ProductResource($product))->response();
+        return $product;
     }
-    
+
     /**
      *
      * @param array $attributes
      * @param Product $product
-     * @return \Illuminate\Http\JsonResponse
+     * @return boolean
      */
-    public function update(array $attributes, Product $product): \Illuminate\Http\JsonResponse
+    public function update(array $attributes, Product $product): bool
     {
         $updated = DB::transaction(function () use($attributes, $product) {
             $updated = false;
@@ -98,15 +102,15 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
 
             return $updated;
         });
-        return response()->json(['status' => $updated]);
+        return $updated;
     }
 
     /**
      *
      * @param Product $product
-     * @return \Illuminate\Http\JsonResponse
+     * @return boolean
      */
-    public function delete(Product $product): \Illuminate\Http\JsonResponse
+    public function delete(Product $product): bool
     {
         $deleted = DB::transaction(function () use($product) {
             foreach ($product->attributes as $attribute) {
@@ -115,6 +119,6 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
             $product->deleteImages();
             return $product->delete();
         });
-        return response()->json(['status' => $deleted]);
+        return $deleted;
     }
 }

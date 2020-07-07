@@ -32,10 +32,9 @@ trait Commentable {
      * @param string $body
      * @return bool
      */
-    public function updateComment(string $body){
-        $this->comments()->first()->update([
+    public function updateComment(string $body, Comment $comment){
+        return $comment->update([
             'body' => $body
         ]);
-        return true;
     }
 }
