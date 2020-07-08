@@ -2,6 +2,7 @@
 
 use App\Models\Attribute;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +14,23 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UserSeeder::class);
+       $this->setRoles();
+       $this->setAttributes();
+    }
+
+    private function setRoles() {
+        $roles = array(
+            'admin','seller','user','banned'
+        );
+        foreach($roles as $role){
+            Role::create([
+                'name' => $role,
+                'guard_name' => 'api'
+            ]);
+        }
+    }
+
+    private function setAttributes() {
         $colors  =array(
             "800000" => "Maroon",
             "8B0000" => "DarkRed",

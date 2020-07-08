@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
-use App\Models\Category;
-use App\Http\Requests\Category\storeRequest;
+use App\Http\Controllers\Controller;
+use App\Models\Rate;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class RateController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -24,18 +24,18 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(storeRequest $request)
+    public function store(Request $request)
     {
-        
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Category  $category
+     * @param  \App\Rate  $rate
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show(Rate $rate)
     {
         //
     }
@@ -44,10 +44,10 @@ class CategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Category  $category
+     * @param  \App\Rate  $rate
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Rate $rate)
     {
         //
     }
@@ -55,10 +55,10 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Category  $category
+     * @param  \App\Rate  $rate
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Rate $rate)
     {
         //
     }

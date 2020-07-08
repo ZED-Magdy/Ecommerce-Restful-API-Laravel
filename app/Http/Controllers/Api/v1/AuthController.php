@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Controller;
 use App\Http\Repositories\Interfaces\ApiAuthInterface;
 use App\Http\Requests\auth\LoginRequest;
 use App\Http\Requests\auth\RegisterRequest;
@@ -32,7 +33,7 @@ class AuthController extends Controller
      * @return JsonResponse
      */
     public function register(RegisterRequest $request) :JsonResponse{
-        return $this->repo->register($request->only(['name','email','password','number','address','gender','image']));
+        return $this->repo->register($request->all());
     }
     /**
      *

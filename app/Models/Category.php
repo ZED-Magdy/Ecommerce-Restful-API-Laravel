@@ -12,15 +12,31 @@ class Category extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function subCategories(){
-        return $this->hasMany('App\Models\Category','parent_id');
+    public function products(){
+        return $this->hasMany('App\Models\Product');
+    }
+    
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function childProducts(){
+        return $this->hasManyThrough('App\Models\Product','App\Models\Category','parent_id','category_id');
     }
 
     /**
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function products(){
-        return $this->belongsToMany('App\Models\Product','category_product');
+    public function parent(){
+        return $this->belongsTo('App\Models\Category','parent_id');
+    }
+    
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function children(){
+        return $this->hasMany('App\Models\Category','parent_id');
     }
 }

@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
-use App\Triats\Imageable;
+use App\Traits\Commentable;
+use App\Traits\Imageable;
+use App\Traits\Rateable;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use Imageable;
+    use Imageable, Rateable, Commentable;
     
-    protected $fillable = ['user_id','name','description','stoke','price'];
+    protected $fillable = ['user_id','name','description','stock','price','category_id'];
 
     /**
      *
@@ -21,10 +23,10 @@ class Product extends Model
 
     /**
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function categories(){
-        return $this->belongsToMany('App\Models\Category','category_product');
+    public function category(){
+        return $this->belongsTo('App\Models\Category');
     }
 
     /**

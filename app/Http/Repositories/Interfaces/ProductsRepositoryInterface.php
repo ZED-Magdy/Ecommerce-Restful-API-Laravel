@@ -3,37 +3,43 @@ namespace App\Http\Repositories\Interfaces;
 
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ProductsRepositoryInterface {
+
     /**
      *
      * @param integer $perPage
-     * @return JsonResponse
+     * @return LengthAwarePaginator
      */
-    public function paginated($perPage = 15) : JsonResponse;
+    public function paginated(int $perPage = 30) : LengthAwarePaginator;
+
     /**
      *
      * @param Product $product
-     * @return JsonResponse
+     * @return Product
      */
-    public function find(Product $product) : JsonResponse;
+    public function find(Product $product) : Product;
+
     /**
      *
      * @param array $attributes
-     * @return JsonResponse
+     * @return Product
      */
-    public function create(array $attributes) : JsonResponse;
+    public function create(array $attributes) : Product;
+
     /**
      *
-     * @param array $attribute
+     * @param array $attributes
      * @param Product $product
-     * @return JsonResponse
+     * @return boolean
      */
-    public function update(array $attribute,Product $product) : JsonResponse;
+    public function update(array $attributes,Product $product) : bool;
+
     /**
      *
      * @param Product $product
-     * @return JsonResponse
+     * @return boolean
      */
-    public function delete(Product $product) :JsonResponse;
+    public function delete(Product $product) :bool;
 }

@@ -7,7 +7,9 @@ use App\Http\Repositories\Interfaces\ProductsRepositoryInterface;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Mixed_;
 
 class ProductsRepository extends BaseRepository implements ProductsRepositoryInterface {
 
@@ -15,28 +17,36 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
     {
         parent::__construct($product);
     }
+
     /**
      *
      * @param integer $perPage
-     * @return JsonResponse
+     * @return LengthAwarePaginator
      */
-    public function paginated($perPage = 30):JsonResponse
+    public function paginated(int $perPage = 30):LengthAwarePaginator
     {
-        $products = $this->model->with(['categories'])->paginate($perPage);
+        $products = $this->model->with(['category'])->paginate($perPage);
 
-        return ProductResource::collection($products)->response();
+        return $products;
     }
+
     /**
      *
      * @param Product $product
-     * @return JsonResponse
+     * @return Product
      */
-    public function find(Product $product):JsonResponse
+    public function find(Product $product):Product
     {
-        $product = $product->load(['categories','images']);
-        return (new ProductResource($product))->response();
+        $product = $product->load(['category','images','attributes']);
+        return $product;
     }
-    public function create(array $attributes): \Illuminate\Http\JsonResponse
+
+    /**
+     *
+     * @param array $attributes
+     * @return Product
+     */
+    public function create(array $attributes): Product
     {
         $product = DB::transaction(function () use($attributes) {
             $product = $this->model->create([
@@ -44,23 +54,71 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
                 "description" => $attributes['description'],
                 "stock"       => $attributes['stock'],
                 "price"       => $attributes['price'],
+                "category_id" => $attributes['category_id'],
                 "user_id"     => auth()->id()
             ]);
-            $product->categories()->attach($attributes['category_id']);
-             //TODO: Add Product Attributes
+            $product->attributes()->attach($attributes['attributes']);
             $product->addAvatar($attributes['thumbnail']);
             $product->addImages($attributes['images']);
             return $product;
         });
 
-        return (new ProductResource($product))->response();
+        return $product;
     }
-    public function update(array $attribute, Product $product): \Illuminate\Http\JsonResponse
+
+    /**
+     *
+     * @param array $attributes
+     * @param Product $product
+     * @return boolean
+     */
+    public function update(array $attributes, Product $product): bool
     {
-        return response()->json();
+        $updated = DB::transaction(function () use($attributes, $product) {
+            $updated = false;
+            if(isset($attributes['product_updated'])){
+                $updated = $product->update([
+                    'name'        => $attributes['name'],
+                    'description' => $attributes['description'],
+                    'stock'       => $attributes['stock'],
+                    'price'       => $attributes['price'],
+                    'category_id' => $attributes['category_id']
+                ]);
+            }
+            if(isset($attributes['thumbnail_updated'])){
+                $updated = $product->addAvatar($attributes['thumbnail'],true) ? true : false;
+                
+            }
+            if(isset($attributes['images_updated'])){
+                $updated = $product->addImages($attributes['images'],true) ? true : false;
+            }
+            if(isset($attributes['attributes_updated'])){
+                foreach ($product->attributes as $attribute) {
+                    $product->attributes()->detach($attribute->id);
+                }
+                $product->attributes()->attach($attributes['attributes']);
+                $updated = true;
+            }
+
+            return $updated;
+        });
+        return $updated;
     }
-    public function delete(Product $product): \Illuminate\Http\JsonResponse
+
+    /**
+     *
+     * @param Product $product
+     * @return boolean
+     */
+    public function delete(Product $product): bool
     {
-        return response()->json();
+        $deleted = DB::transaction(function () use($product) {
+            foreach ($product->attributes as $attribute) {
+                $product->attributes()->detach($attribute->id);
+            }
+            $product->deleteImages();
+            return $product->delete();
+        });
+        return $deleted;
     }
 }

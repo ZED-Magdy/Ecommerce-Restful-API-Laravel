@@ -14,20 +14,16 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+        $condition = auth()->check() && (auth()->id() == $this->id || auth()->user()->hasRole('admin'));
         return [
-            "id" => $this->id,
-            "name" => $this->name,
-            "email" => $this->email,
-            "address" => $this->address,
-            "phone" => $this->number,
-            "gender" => $this->gender,
-            "avatar" => new ImageResource($this->avatar),
-            "roles" => [ //TODO: When Roles loaded Resource
-                [
-                    "id" => 1,
-                    "name" => "admin"
-                ]
-            ],
+            "id"          => $this->id,
+            "name"        => $this->name,
+            "email"       => $this->when($condition,$this->email),
+            "address"     => $this->when($condition,$this->address),
+            "phone"       => $this->when($condition,$this->number),
+            "gender"      => $this->when($condition,$this->gender),
+            "avatar"      => new ImageResource($this->avatar),
+            "roles"       => RoleResource::collection($this->whenLoaded('roles')),
             "signup_time" => $this->created_at->diffForHumans(),
         ];
     }
