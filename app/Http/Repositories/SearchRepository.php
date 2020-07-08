@@ -28,7 +28,6 @@ class SearchRepository {
         $term        = request()->get('query');
         $searchTerms = explode(' ',$term);
         $order       = request()->get('order','ASC');
-        $limit       = request()->get('limit');
         $attributes  = $this->attributes;
 
         $query = (new $this->model)->newQuery();
