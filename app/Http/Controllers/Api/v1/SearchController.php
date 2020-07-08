@@ -7,9 +7,21 @@ use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SearchController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        $validate = $request->validate([
+            "query" => 'required|min:3',
+            "limit" => 'numeric|min:1',
+            "order" => 'in:asc,desc,DESC,ASC'
+        ]);
+        if(isset($validate["message"])){
+            return response()->json($validate);
+        }
+    }
     public function search(){
         $term = request()->get('query');
         $searchTerms = explode(' ',$term);
