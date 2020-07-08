@@ -27,4 +27,4 @@ Route::group(['prefix' => 'products'], function () {
     Route::get('/{product}/ratings','ProductRateController@index')->name('product.ratings.index');
     Route::post('/{product}/ratings','ProductRateController@store')->name('product.ratings.store')->middleware('auth:api');
 });
-Route::get('/search','SearchController@search');
+Route::get('/search','SearchController@search')->name('products.search');

@@ -40,7 +40,7 @@ class SearchRepository {
             }
            }
         })->orderBy('id',$order);
-        $query = $query->paginate($this->perPage);
+        $query = $query->paginate($this->perPage)->withPath(route('products.search',["query" => $term,"order"=> $order]));
         return $query;
     }
 }
