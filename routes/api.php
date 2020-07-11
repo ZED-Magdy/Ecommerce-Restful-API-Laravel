@@ -28,3 +28,6 @@ Route::group(['prefix' => 'products'], function () {
     Route::post('/{product}/ratings','ProductRateController@store')->name('product.ratings.store')->middleware('auth:api');
 });
 Route::get('/search','SearchController@search')->name('products.search');
+Route::get('wishes','WishController@index')->name('wishes.index')->middleware('auth:api');
+Route::post('wishes','WishController@store')->name('wishes.store')->middleware('auth:api');
+Route::delete('wishes/{product}','WishController@destroy')->name('wishes.destroy')->middleware('auth:api');

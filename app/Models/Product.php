@@ -5,11 +5,12 @@ namespace App\Models;
 use App\Traits\Commentable;
 use App\Traits\Imageable;
 use App\Traits\Rateable;
+use App\Traits\Wishable;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use Imageable, Rateable, Commentable;
+    use Imageable, Rateable, Commentable, Wishable;
     
     protected $fillable = ['user_id','name','description','stock','price','category_id'];
 

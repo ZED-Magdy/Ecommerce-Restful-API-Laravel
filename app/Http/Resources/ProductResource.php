@@ -26,7 +26,7 @@ class ProductResource extends JsonResource
             "create_time" => $this->created_at->diffForHumans(),
             "attributes" => AttributeResource::collection($this->whenLoaded('attributes')),
             "category"   => new CategoryResource($this->whenLoaded('category')),
-            "seller"       => new UserResource($this->user),
+            "seller"       => new UserResource($this->whenLoaded('user')),
             "ratings"    => [
                 "link" => route('product.ratings.index',$this->id)
             ]

@@ -28,7 +28,7 @@ class CategoryRepository extends BaseRepository {
      */
     public function find(Category $category)
     {
-        $category = $category->load(['products','childProducts']);
+        $category = $category->load(['products' => fn($q) => $q->with('user'),'childProducts' => fn($q) => $q->with('user')]);
         return $category;
     }
 

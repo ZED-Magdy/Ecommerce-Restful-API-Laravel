@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\CanWish;
 use App\Traits\Imageable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,7 +12,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable, Imageable, HasRoles;
+    use Notifiable, Imageable, HasRoles, CanWish;
 
     /**
      * The attributes that are mass assignable.

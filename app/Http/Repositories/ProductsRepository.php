@@ -25,7 +25,7 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
      */
     public function paginated(int $perPage = 30):LengthAwarePaginator
     {
-        $products = $this->model->with(['category'])->paginate($perPage);
+        $products = $this->model->with(['category','user'])->paginate($perPage);
 
         return $products;
     }
@@ -37,7 +37,7 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
      */
     public function find(Product $product):Product
     {
-        $product = $product->load(['category','images','attributes']);
+        $product = $product->load(['category','user','images','attributes']);
         return $product;
     }
 
