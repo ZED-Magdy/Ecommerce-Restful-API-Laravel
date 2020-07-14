@@ -3,32 +3,13 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Repositories\Interfaces\ProductsRepositoryInterface;
 use App\Http\Requests\Product\storeRequest;
 use App\Http\Requests\Product\updateRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    /**
-    *
-    * @var ProductsRepositoryInterface $repo
-    *
-    */
-    private $repo;
-    
-    /**
-    *
-    * @param ProductsRepositoryInterface $productsRepositoryInterface
-    *
-    */
-    public function __construct(ProductsRepositoryInterface $productsRepositoryInterface)
-    {
-        $this->repo = $productsRepositoryInterface;
-    }
-    
     /**
      * Display a listing of the resource.
      *
@@ -36,7 +17,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return ProductResource::collection($this->repo->paginated())->response();
+        return ProductResource::collection(\ProductRepository::paginated())->response();
     }
 
     /**
@@ -47,10 +28,10 @@ class ProductController extends Controller
      */
     public function store(storeRequest $request)
     {
-        $product = $this->repo->create($request->only([
+        $product = \ProductRepository::create($request->only([
             "name","description","attributes","thumbnail",
             "images","stock","category_id","price"]));
-        
+
         return (new ProductResource($product))->response();
     }
 
@@ -62,7 +43,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return (new ProductResource($this->repo->find($product)));
+        return (new ProductResource(\ProductRepository::find($product)));
     }
 
     /**
@@ -74,7 +55,7 @@ class ProductController extends Controller
      */
     public function update(updateRequest $request, Product $product)
     {
-        $updated = $this->repo->update($request->all(),$product);
+        $updated = \ProductRepository::update($request->all(), $product);
 
         return response()->json(['status' => $updated]);
     }
@@ -87,7 +68,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $deleted = $this->repo->delete($product);
+        $deleted = \ProductRepository::delete($product);
         return response()->json(['status' => $deleted]);
     }
 }

@@ -7,12 +7,13 @@ use App\Traits\Imageable;
 use App\Traits\Rateable;
 use App\Traits\Wishable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 class Product extends Model
 {
     use Imageable, Rateable, Commentable, Wishable;
-    
-    protected $fillable = ['user_id','name','description','stock','price','category_id'];
+
+    protected $fillable = ['user_id','stock','price','category_id'];
 
     /**
      *
@@ -26,7 +27,8 @@ class Product extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo('App\Models\Category');
     }
 
@@ -34,7 +36,12 @@ class Product extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function attributes(){
-        return $this->belongsToMany('App\Models\Attribute','attribute_product');
+    public function attributes()
+    {
+        return $this->belongsToMany('App\Models\Attribute', 'attribute_product');
+    }
+    public function translation($lang = "en")
+    {
+        return $this->hasOne(ProductTranslation::class)->where('lang', $lang);
     }
 }

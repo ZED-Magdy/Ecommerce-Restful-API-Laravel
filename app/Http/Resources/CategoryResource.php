@@ -16,14 +16,14 @@ class CategoryResource extends JsonResource
     public function toArray($request)
     {
         $products = $this->whenLoaded('products');
-        if(!$products instanceof MissingValue){
+        if (!$products instanceof MissingValue) {
             $products = $products->merge($this->childProducts)->sortBy("id");
         }
         return [
-            "id"             => $this->id,
-            "name"           => $this->name,
-            'children'       => CategoryResource::collection($this->whenLoaded('children')),
-            "products"       => ProductResource::collection($products),
+            "id"       => $this->id,
+            "name"     => isset($this->translation) ? $this->translation->name : null,
+            'children' => CategoryResource::collection($this->whenLoaded('children')),
+            "products" => ProductResource::collection($products),
         ];
     }
 }

@@ -2,9 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Model\Product;
-use App\Model\User;
+use App\Models\Product;
+use App\User;
 use App\Models\Category;
+use App\Models\CategoryTranslation;
+use App\Models\ProductTranslation;
 use App\Models\Rate;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
@@ -30,25 +32,37 @@ $factory->define(User::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(Product::class, function(Faker $faker) {
+$factory->define(Product::class, function (Faker $faker) {
     return [
-        "name" => $faker->name(),
-        "description" => $faker->paragraph(),
         "stock" => 100,
-        "user_id" => 1
+        "user_id" => 1,
+        "category_id" => rand(1, 5),
+        "price" => rand(10.0, 99.0)
     ];
 });
-
-$factory->define(Category::class, function(Faker $faker) {
+$factory->define(ProductTranslation::class, function (Faker $faker) {
     return [
-        "name"      => $faker->firstName(),
-        "parent_id" => rand(1,5),
+        "product_id" => rand(1, 100),
+        "name" => $faker->name(),
+        "lang" => "en",
+        "description" => $faker->paragraph(),
     ];
 });
-
-$factory->define(Rate::class, function(Faker $faker) {
+$factory->define(Category::class, function (Faker $faker) {
     return [
-        "stars"      => rand(1.0,5.0),
+        "parent_id" => null,
+    ];
+});
+$factory->define(CategoryTranslation::class, function (Faker $faker) {
+    return [
+        "category_id" => rand(1, 5),
+        "name" => $faker->firstName(),
+        "lang" => "en",
+    ];
+});
+$factory->define(Rate::class, function (Faker $faker) {
+    return [
+        "stars"      => rand(1.0, 5.0),
         "user_id" => 1,
         "rateable_type" => "App\Models\Product",
         "rateable_id" => 13

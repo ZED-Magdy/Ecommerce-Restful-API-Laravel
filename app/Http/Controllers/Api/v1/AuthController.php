@@ -32,7 +32,8 @@ class AuthController extends Controller
      * @param RegisterRequest $request
      * @return JsonResponse
      */
-    public function register(RegisterRequest $request) :JsonResponse{
+    public function register(RegisterRequest $request): JsonResponse
+    {
         return $this->repo->register($request->all());
     }
     /**
@@ -40,28 +41,32 @@ class AuthController extends Controller
      * @param LoginRequest $request
      * @return JsonResponse
      */
-    public function login(LoginRequest $request) :JsonResponse{
+    public function login(LoginRequest $request): JsonResponse
+    {
         return $this->repo->login($request->only(['email','password']));
     }
     /**
      *
      * @return JsonResponse
      */
-    public function authUser():JsonResponse{
+    public function authUser(): JsonResponse
+    {
         return $this->repo->authUser();
     }
     /**
      *
      * @return JsonResponse
      */
-    public function refreshToken() :JsonResponse{
+    public function refreshToken(): JsonResponse
+    {
         return $this->repo->refreshToken();
     }
     /**
      *
      * @return JsonResponse
      */
-    public function logout(){
+    public function logout(): JsonResponse
+    {
         return $this->repo->logout();
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Repositories\CategoryRepository;
 use App\Models\Category;
 use App\Http\Requests\Category\storeRequest;
 use App\Http\Resources\CategoryResource;
@@ -11,12 +10,6 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-
-    private $repo;
-
-    public function __construct(CategoryRepository $categoryRepository){
-        $this->repo = $categoryRepository;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return CategoryResource::collection($this->repo->all())->response();
+        return CategoryResource::collection(\CategoryRepository::all())->response();
     }
     /**
      * Store a newly created resource in storage.
@@ -34,7 +27,7 @@ class CategoryController extends Controller
      */
     public function store(storeRequest $request)
     {
-        
+        //
     }
 
     /**
@@ -45,7 +38,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return (new CategoryResource($this->repo->find($category)))->response();
+        return (new CategoryResource(\CategoryRepository::find($category)))->response();
     }
 
     /**

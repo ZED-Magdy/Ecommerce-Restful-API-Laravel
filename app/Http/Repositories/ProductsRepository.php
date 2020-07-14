@@ -23,9 +23,9 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
      * @param integer $perPage
      * @return LengthAwarePaginator
      */
-    public function paginated(int $perPage = 30):LengthAwarePaginator
+    public function paginated(int $perPage = 30): LengthAwarePaginator
     {
-        $products = $this->model->with(['category','user'])->paginate($perPage);
+        $products = $this->model->with(['category','user','translation'])->paginate($perPage);
 
         return $products;
     }
@@ -35,9 +35,9 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
      * @param Product $product
      * @return Product
      */
-    public function find(Product $product):Product
+    public function find(Product $product): Product
     {
-        $product = $product->load(['category','user','images','attributes']);
+        $product = $product->load(['category','user','images','attributes', 'translation']);
         return $product;
     }
 
@@ -48,7 +48,7 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
      */
     public function create(array $attributes): Product
     {
-        $product = DB::transaction(function () use($attributes) {
+        $product = DB::transaction(function () use ($attributes) {
             $product = $this->model->create([
                 "name"        => $attributes['name'],
                 "description" => $attributes['description'],
@@ -74,9 +74,9 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
      */
     public function update(array $attributes, Product $product): bool
     {
-        $updated = DB::transaction(function () use($attributes, $product) {
+        $updated = DB::transaction(function () use ($attributes, $product) {
             $updated = false;
-            if(isset($attributes['product_updated'])){
+            if (isset($attributes['product_updated'])) {
                 $updated = $product->update([
                     'name'        => $attributes['name'],
                     'description' => $attributes['description'],
@@ -85,14 +85,13 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
                     'category_id' => $attributes['category_id']
                 ]);
             }
-            if(isset($attributes['thumbnail_updated'])){
-                $updated = $product->addAvatar($attributes['thumbnail'],true) ? true : false;
-                
+            if (isset($attributes['thumbnail_updated'])) {
+                $updated = $product->addAvatar($attributes['thumbnail'], true) ? true : false;
             }
-            if(isset($attributes['images_updated'])){
-                $updated = $product->addImages($attributes['images'],true) ? true : false;
+            if (isset($attributes['images_updated'])) {
+                $updated = $product->addImages($attributes['images'], true) ? true : false;
             }
-            if(isset($attributes['attributes_updated'])){
+            if (isset($attributes['attributes_updated'])) {
                 foreach ($product->attributes as $attribute) {
                     $product->attributes()->detach($attribute->id);
                 }

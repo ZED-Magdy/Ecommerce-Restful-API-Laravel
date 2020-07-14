@@ -14,7 +14,8 @@ class Rate extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function rateable(){
+    public function rateable()
+    {
         return $this->morphTo();
     }
 }

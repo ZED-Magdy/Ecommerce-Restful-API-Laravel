@@ -12,7 +12,8 @@ class Wish extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function wishable(){
+    public function wishable()
+    {
         return $this->morphTo();
     }
 }

@@ -6,37 +6,45 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $fillable = ['name','parent_id'];
-    
+    protected $fillable = ['parent_id'];
+
     /**
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function products(){
+    public function products()
+    {
         return $this->hasMany('App\Models\Product');
     }
-    
+
     /**
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function childProducts(){
-        return $this->hasManyThrough('App\Models\Product','App\Models\Category','parent_id','category_id');
+    public function childProducts()
+    {
+        return $this->hasManyThrough('App\Models\Product', 'App\Models\Category', 'parent_id', 'category_id');
     }
 
     /**
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function parent(){
-        return $this->belongsTo('App\Models\Category','parent_id');
+    public function parent()
+    {
+        return $this->belongsTo('App\Models\Category', 'parent_id');
     }
-    
+
     /**
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function children(){
-        return $this->hasMany('App\Models\Category','parent_id');
+    public function children()
+    {
+        return $this->hasMany('App\Models\Category', 'parent_id');
+    }
+    public function translation($lang = "en")
+    {
+        return $this->hasOne('App\Models\categoryTranslation')->where('lang', $lang);
     }
 }

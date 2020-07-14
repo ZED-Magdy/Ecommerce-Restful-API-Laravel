@@ -12,7 +12,8 @@ class Attribute extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function products(){
-        return $this->belongsToMany('App\Models\Products','attribute_product');
+    public function products()
+    {
+        return $this->belongsToMany('App\Models\Products', 'attribute_product');
     }
 }

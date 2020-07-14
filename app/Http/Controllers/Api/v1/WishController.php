@@ -29,15 +29,17 @@ class WishController extends Controller
      */
     public function store(Request $request)
     {
-        $found = auth()->user()->wishes()->where("wishable_type",Product::class)->where('wishable_id',$request->product_id)->first();
-        if($found) {
-            return response()->json(["status" => false, "message" => "already exists"],422);
+        $found = auth()->user()->wishes()->where("wishable_type", Product::class)
+                                         ->where('wishable_id', $request->product_id)->first();
+        if ($found) {
+            return response()->json(["status" => false, "message" => "already exists"], 422);
         }
         $product = Product::find($request->product_id);
-        if($product == null){
-            return response()->json(["status" => false, "message" => "product not found"],404);
+        if ($product == null) {
+            return response()->json(["status" => false, "message" => "product not found"], 404);
         }
         $wish = auth()->user()->wish($product);
+        
         return (new WishResource($wish))->response();
     }
 

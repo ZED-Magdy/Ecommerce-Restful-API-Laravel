@@ -5,9 +5,11 @@ namespace App\Http\Repositories;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
 
-class CategoryRepository extends BaseRepository {
+class CategoryRepository extends BaseRepository
+{
 
-    public function __construct(Category $category){
+    public function __construct(Category $category)
+    {
         parent::__construct($category);
     }
 
@@ -17,7 +19,7 @@ class CategoryRepository extends BaseRepository {
      */
     public function all()
     {
-        $categories = $this->model->where('parent_id',null)->with('children')->get();
+        $categories = $this->model->where('parent_id', null)->with('children', 'translation')->get();
         return $categories;
     }
 
@@ -28,7 +30,8 @@ class CategoryRepository extends BaseRepository {
      */
     public function find(Category $category)
     {
-        $category = $category->load(['products' => fn($q) => $q->with('user'),'childProducts' => fn($q) => $q->with('user')]);
+        $category = $category->load(['translation', 'products' => fn($q) => $q
+                                ->with('user'),'childProducts' => fn($q) => $q->with('user')]);
         return $category;
     }
 
