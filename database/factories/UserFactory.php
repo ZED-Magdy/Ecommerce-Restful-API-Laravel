@@ -41,10 +41,11 @@ $factory->define(Product::class, function (Faker $faker) {
     ];
 });
 $factory->define(ProductTranslation::class, function (Faker $faker) {
+    $faker->locale;
     return [
         "product_id" => rand(1, 100),
         "name" => $faker->name(),
-        "lang" => "en",
+        "lang" => "ar",
         "description" => $faker->paragraph(),
     ];
 });
@@ -57,7 +58,7 @@ $factory->define(CategoryTranslation::class, function (Faker $faker) {
     return [
         "category_id" => rand(1, 5),
         "name" => $faker->firstName(),
-        "lang" => "en",
+        "lang" => "ar",
     ];
 });
 $factory->define(Rate::class, function (Faker $faker) {

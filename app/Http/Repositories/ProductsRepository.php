@@ -6,6 +6,7 @@ use App\Category;
 use App\Http\Repositories\Interfaces\ProductsRepositoryInterface;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Models\ProductTranslation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -50,12 +51,16 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
     {
         $product = DB::transaction(function () use ($attributes) {
             $product = $this->model->create([
-                "name"        => $attributes['name'],
-                "description" => $attributes['description'],
                 "stock"       => $attributes['stock'],
                 "price"       => $attributes['price'],
                 "category_id" => $attributes['category_id'],
                 "user_id"     => auth()->id()
+            ]);
+            ProductTranslation::create([
+                "name"        => $attributes['name'],
+                "description" => $attributes['description'],
+                'lang'        => \config('app.locale'),
+                'product_id'  => $product->id
             ]);
             $product->attributes()->attach($attributes['attributes']);
             $product->addAvatar($attributes['thumbnail']);

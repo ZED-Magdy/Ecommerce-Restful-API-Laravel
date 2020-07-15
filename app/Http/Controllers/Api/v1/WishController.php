@@ -7,6 +7,7 @@ use App\Http\Resources\WishResource;
 use App\Models\Product;
 use App\Models\Wish;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WishController extends Controller
 {
@@ -39,7 +40,7 @@ class WishController extends Controller
             return response()->json(["status" => false, "message" => "product not found"], 404);
         }
         $wish = auth()->user()->wish($product);
-        
+
         return (new WishResource($wish))->response();
     }
 

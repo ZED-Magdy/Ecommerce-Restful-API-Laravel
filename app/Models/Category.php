@@ -43,8 +43,9 @@ class Category extends Model
     {
         return $this->hasMany('App\Models\Category', 'parent_id');
     }
-    public function translation($lang = "en")
+    public function translation()
     {
+        $lang = \config('app.locale');
         return $this->hasOne('App\Models\categoryTranslation')->where('lang', $lang);
     }
 }

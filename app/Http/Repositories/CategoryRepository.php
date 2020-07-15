@@ -34,5 +34,4 @@ class CategoryRepository extends BaseRepository
                                 ->with('user'),'childProducts' => fn($q) => $q->with('user')]);
         return $category;
     }
-
 }

@@ -40,8 +40,13 @@ class Product extends Model
     {
         return $this->belongsToMany('App\Models\Attribute', 'attribute_product');
     }
-    public function translation($lang = "en")
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function translation()
     {
+        $lang = \config('app.locale');
         return $this->hasOne(ProductTranslation::class)->where('lang', $lang);
     }
 }
